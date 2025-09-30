@@ -49,40 +49,76 @@ dados.contatos['whats-users'].forEach(function(item){
 const getDadosContatos = function(idUsuario){
 let id = !isNaN(idUsuario)
 
- let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima', contatos: id }
+ let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima', nome: '', contatos: [] }
 
  dados.contatos['whats-users'].forEach(function(item){
 
     if(item.id == idUsuario){
         message.nome = item.account
-        message.foto = item['profile-image']
-    }
-dados.contacts['whats-users'].forEach(function())
- })
-//console.log(message)
+    
+ item.contacts.forEach(function(contato){
+    message.contatos.push({
+        nome: contato.name,
+        foto: contato.image,
+        descricao: contato.description
+               })
+            })
+        }
+    })
+    // console.log(message)
 }
 
 const getMensagens = function(idUsuario){
 let id = !isNaN(idUsuario)
 
-let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima', contatos: id }
+let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima',nome: '', contatos: [] }
 
 dados.contatos['whats-users'].forEach(function(item){
 
     if(item.id == idUsuario){
-        message.contatos = item.contacts
+        message.nome = item.account
+    
+item.contacts.forEach(function(contato){
+                message.contatos.push({
+                nome: contato.name,
+                numero: contato.number,
+                foto: contato.image,
+                descricao: contato.description,
+                mensagens: contato.messages,
 
-        const mensagens = item.contacts.map(contacts =>{
-            
-            return typeof contacts === 'string' ?contacts : contacts.messages
+             })
         })
-  
-
     }
 })
-console.log(message.mensagens)
+console.log(message)
+}
+
+const getConversas = function(number1,  number2){
+let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima',nomeDoUsuario:[], nomeDoContato: [], conversas: [] }
+
+dados.contatos['whats-user'].forEach(function(item){
+    item.contacts.forEach(function(contacts){
+    if(item.number == number1 && contacts.number == number2){
+        message.nomeDoUsuario = item.account
+        message.nomeDoContato = contacts.name
+
+        const nomeDoContato = contacts.name
+
+        contacts.messages.forEach(function(mensagens){
+            if(mensagens.sender == nomeDoContato){
+                const conversa = {enviadoPara: mensagens.sender,
+                    assunto: mensagens.content,
+                    horario: mensagens.time
+                     }
+                    message.conversas.push(conversa)
+                }
+            })
+        }
+    })
+})  
 }
 //getAllDados()
 //getDadosProfile()
-//getDadosContatos('3')
-getMensagens('1')
+// getDadosContatos()
+//getMensagens()
+getConversas()
