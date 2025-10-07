@@ -61,7 +61,7 @@ app.get('/v1/whatts/perfil/mensagens/:number', function(request, response){
 app.get('/v1/whatts/conversas/:number1/:number2', function(request, response){
     let number1 = request.params.number1
     let number2 = request.params.number2
-    
+
     let conversas  = dadosWhatts.getConversas(number1, number2)
 
     response.status(conversas.statuscode)
@@ -69,6 +69,15 @@ app.get('/v1/whatts/conversas/:number1/:number2', function(request, response){
 })
 
 
+app.get('/v1/whatts/perfil/conversas/filtro/:number1/:number2', function(request, response){
+    let number1 = request.params.number1
+    let number2  = request.params.number2
+    let palavraProcurada = request.query.keyWord
+    let filtro = dadosWhatts.getFilter(number1, number2, palavraProcurada)
+
+    response.status(filtro.statuscode)
+    response.json(filtro)
+})
 
 app.listen(PORT, function(){
     console.log('api aguardando...')

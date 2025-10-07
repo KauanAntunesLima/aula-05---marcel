@@ -22,7 +22,10 @@ dadosWhatts.contatos['whats-users'].forEach(function(item){
     message.contatos.push(item.contacts)
     
 })
- return message; 
+if(message.contatos.length > 0)
+ return message
+else
+return MESSAGE_ERROR
 
 //console.log(message)
 }
@@ -43,7 +46,10 @@ dadosWhatts.contatos['whats-users'].forEach(function(item){
         message.criacao = item['created-since']
     } 
  })
- return message;
+    if(number !== '')
+    return message
+    else
+    return MESSAGE_ERROR
 }
 
 const getDadosContatos = function(number){
@@ -65,7 +71,10 @@ let id = !isNaN(number)
             })
         }
     })
-    return message;
+    if(number !== '')
+    return message
+    else
+    return MESSAGE_ERROR
     // console.log(message)
 }
 
@@ -91,7 +100,10 @@ item.contacts.forEach(function(contato){
         })
     }
 })
-return message;
+    if(number !== '')
+    return message
+    else
+    return MESSAGE_ERROR
 }
 
 const getConversas = function(number1,  number2){
@@ -117,11 +129,14 @@ dadosWhatts.contatos['whats-users'].forEach(function(item){
         }
     })
 })
-return message;
+    if(number !== '')
+    return message
+    else
+    return MESSAGE_ERROR
 }
 
 const getFilter = function(number1,  number2, keyWord){
-let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima',nomeDoUsuario:[], nomeDoContato: [], conversas: [] }
+let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima',nomeDoUsuario:'', nomeDoContato: '', conversas: [] }
 
  dadosWhatts.contatos['whats-users'].forEach(function (item) {
         item.contacts.forEach(function (contacts) {
@@ -140,6 +155,10 @@ let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima',
                 }
             })
         })
+    if(number !== '')
+    return message
+    else
+    return MESSAGE_ERROR
 //console.log(message)
 }
 module.exports = {
