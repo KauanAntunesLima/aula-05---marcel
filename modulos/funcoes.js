@@ -5,13 +5,13 @@
  * Versão 1.0
  **********************************************************************************************************************/
 // Import do arquivo contatos
-const dados = require('./contatos.js')
+const dadosWhatts = require('./contatos.js')
 const MESSAGE_ERROR = {status : false, statuscode: 500, development: 'Kauan Antunes Lima'}
 
 const getAllDados = function(){
 let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima', contatos: []}
 
-dados.contatos['whats-users'].forEach(function(item){
+dadosWhatts.contatos['whats-users'].forEach(function(item){
     message.contatos.push(item.id)
     message.contatos.push(item.account)
     message.contatos.push(item.nickname)
@@ -20,40 +20,40 @@ dados.contatos['whats-users'].forEach(function(item){
     message.contatos.push(item.number)
     message.contatos.push(item.background)
     message.contatos.push(item.contacts)
-
+    
 })
+ return message; 
+
 //console.log(message)
 }
 
-const getDadosProfile = function(idUsuario){
-let id = !isNaN(idUsuario)
+const getDadosProfile = function(number){
+let id = !isNaN(number)
 
 let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima', contatos: id }
 
-dados.contatos['whats-users'].forEach(function(item){
+dadosWhatts.contatos['whats-users'].forEach(function(item){
 
-    if(item.id == idUsuario){
+    if(item.number == number){
         message.nome = item.account
         message.nick = item.nickname
         message.foto = item['profile-image']
         message.numero = item.number
         message.cor = item.background
         message.criacao = item['created-since']
-    }
-
- // console.log(message)
-
+    } 
  })
+ return message;
 }
 
-const getDadosContatos = function(idUsuario){
-let id = !isNaN(idUsuario)
+const getDadosContatos = function(number){
+let id = !isNaN(number)
 
  let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima', nome: '', contatos: [] }
 
- dados.contatos['whats-users'].forEach(function(item){
+ dadosWhatts.contatos['whats-users'].forEach(function(item){
 
-    if(item.id == idUsuario){
+    if(item.number == number){
         message.nome = item.account
     
  item.contacts.forEach(function(contato){
@@ -65,17 +65,18 @@ let id = !isNaN(idUsuario)
             })
         }
     })
+    return message;
     // console.log(message)
 }
 
-const getMensagens = function(idUsuario){
-let id = !isNaN(idUsuario)
+const getMensagens = function(number){
+let numero = !isNaN(number)
 
 let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima',nome: '', contatos: [] }
 
-dados.contatos['whats-users'].forEach(function(item){
+dadosWhatts.contatos['whats-users'].forEach(function(item){
 
-    if(item.id == idUsuario){
+    if(item.number == number){
         message.nome = item.account
     
 item.contacts.forEach(function(contato){
@@ -90,35 +91,62 @@ item.contacts.forEach(function(contato){
         })
     }
 })
-console.log(message)
+return message;
 }
 
 const getConversas = function(number1,  number2){
-let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima',nomeDoUsuario:[], nomeDoContato: [], conversas: [] }
+let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima',nomeDoUsuario:'', nomeDoContato: '', conversas: [] }
 
-dados.contatos['whats-user'].forEach(function(item){
+dadosWhatts.contatos['whats-users'].forEach(function(item){
     item.contacts.forEach(function(contacts){
     if(item.number == number1 && contacts.number == number2){
         message.nomeDoUsuario = item.account
         message.nomeDoContato = contacts.name
 
-        const nomeDoContato = contacts.name
+        let nomeDoContato = contacts.name
 
         contacts.messages.forEach(function(mensagens){
-            if(mensagens.sender == nomeDoContato){
-                const conversa = {enviadoPara: mensagens.sender,
-                    assunto: mensagens.content,
-                    horario: mensagens.time
-                     }
-                    message.conversas.push(conversa)
+            if(mensagens.sender == nomeDoContato || mensagens.sender == "me"){
+                       let conversas = {enviado_para: mensagens.sender,
+                            conteudo: mensagens.content,
+                            horario: mensagens.time
+                    }
+                    message.conversas.push(conversas)
                 }
             })
         }
     })
-})  
+})
+return message;
 }
-//getAllDados()
-//getDadosProfile()
-// getDadosContatos()
-//getMensagens()
-getConversas()
+
+const getFilter = function(number1,  number2, keyWord){
+let message = {status: true, statuscode: 200, development: 'Kauan Antunes Lima',nomeDoUsuario:[], nomeDoContato: [], conversas: [] }
+
+ dadosWhatts.contatos['whats-users'].forEach(function (item) {
+        item.contacts.forEach(function (contacts) {
+        if (item.number === number1 && contacts.number === number2) {
+            message.nomeDoUsuario = item.account
+            message.nomeDoContato = contacts.name
+                    contacts.messages.forEach(function (mensagens) {
+                        if(mensagens.content.toUpperCase().includes(keyWord.toUpperCase())){
+                            let conversa = { enviado_para: mensagens.sender,
+                                conteudo: mensagens.content,
+                                horario: mensagens.time
+                            }
+                        message.conversas.push(conversa)
+                        }
+                    })
+                }
+            })
+        })
+//console.log(message)
+}
+module.exports = {
+getAllDados,
+getDadosProfile,
+getDadosContatos,
+getMensagens,
+getConversas,
+getFilter
+}
